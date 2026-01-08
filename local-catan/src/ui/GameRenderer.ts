@@ -461,6 +461,8 @@ export class GameRenderer {
     private handleEdgeClick(edgeId: number, x: number, y: number): void {
         const state = this.gameEngine.getState()
         const edge = state.edges[edgeId]
+        const currentPlayer = this.gameEngine.getCurrentPlayer()
+        
         // Try both vertices to see which one allows road placement
         const options1 = this.gameEngine.getEdgePlacementOptions(edgeId, edge.vertex1)
         const options2 = this.gameEngine.getEdgePlacementOptions(edgeId, edge.vertex2)
@@ -469,9 +471,20 @@ export class GameRenderer {
         if (options.length > 0) {
             this.showPlacementMenu(options, x, y, (type: string) => {
                 if (this.onPlacementSelected) {
-                    // For roads, we need to determine which vertex to use
-                    // For now, use the first vertex
-                    this.onPlacementSelected(type, edgeId, edge.vertex1)
+                    // For roads in initial placement, find which vertex has the settlement
+                    // For normal game, either vertex works (connectivity is checked differently)
+                    let vertexId = edge.vertex1
+                    if (state.initialPlacementPhase) {
+                        // Prefer the vertex with the player's settlement
+                        const v1 = state.vertices[edge.vertex1]
+                        const v2 = state.vertices[edge.vertex2]
+                        if (v2.building === 'settlement' && v2.playerColor === currentPlayer.color) {
+                            vertexId = edge.vertex2
+                        } else if (v1.building === 'settlement' && v1.playerColor === currentPlayer.color) {
+                            vertexId = edge.vertex1
+                        }
+                    }
+                    this.onPlacementSelected(type, edgeId, vertexId)
                 }
             })
         }

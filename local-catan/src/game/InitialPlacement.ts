@@ -86,13 +86,21 @@ export class InitialPlacementManager {
             return false
         }
 
-        // Road must be connected to the settlement just placed
-        const vertex = this.state.vertices[vertexId]
-        if (vertex.building !== 'settlement' || vertex.playerColor !== player.color) {
+        // Road must be connected to a settlement the player just placed
+        // Check if EITHER vertex of this edge has the player's settlement
+        const vertex1 = this.state.vertices[edge.vertex1]
+        const vertex2 = this.state.vertices[edge.vertex2]
+        
+        // Road is valid if either vertex has the player's settlement
+        const connectsToSettlement = 
+            (vertex1.building === 'settlement' && vertex1.playerColor === player.color) ||
+            (vertex2.building === 'settlement' && vertex2.playerColor === player.color)
+        
+        if (!connectsToSettlement) {
             return false
         }
 
-        // Simplified - would need to check if edge connects to vertex
+        // Edge connects to at least one vertex with the player's settlement
         return true
     }
 
