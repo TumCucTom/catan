@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Local Catan - 4 Players</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+            background: #1a1a2e;
+            color: #eee;
+            overflow: hidden;
+        }
+        #app {
+            width: 100vw;
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+        #game-container {
+            flex: 1;
+            position: relative;
+        }
+        #player-info {
+            position: absolute;
+            top: 10px;
+            left: 10px;
+            background: rgba(0, 0, 0, 0.7);
+            padding: 15px;
+            border-radius: 8px;
+            z-index: 100;
+            min-width: 200px;
+        }
+        .player {
+            padding: 8px;
+            margin: 5px 0;
+            border-radius: 4px;
+            border: 2px solid transparent;
+        }
+        .player.active {
+            border-color: #ffd700;
+            background: rgba(255, 215, 0, 0.2);
+        }
+        .player-name {
+            font-weight: bold;
+            margin-bottom: 5px;
+        }
+        .player-resources {
+            font-size: 0.9em;
+            color: #ccc;
+        }
+        .player-vp {
+            font-size: 1.1em;
+            color: #ffd700;
+            margin-top: 5px;
+        }
+        #current-player {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            background: rgba(0, 0, 0, 0.7);
+            padding: 15px;
+            border-radius: 8px;
+            z-index: 100;
+            text-align: center;
+        }
+        #actions {
+            position: absolute;
+            bottom: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            display: flex;
+            gap: 10px;
+            z-index: 100;
+        }
+        button {
+            padding: 12px 24px;
+            background: #4a90e2;
+            color: white;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 16px;
+            font-weight: bold;
+            transition: background 0.2s;
+        }
+        button:hover:not(:disabled) {
+            background: #357abd;
+        }
+        button:disabled {
+            background: #555;
+            cursor: not-allowed;
+        }
+        #dice-result {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background: rgba(0, 0, 0, 0.9);
+            padding: 30px;
+            border-radius: 12px;
+            z-index: 200;
+            text-align: center;
+            display: none;
+        }
+        #dice-result.show {
+            display: block;
+        }
+        .dice-value {
+            font-size: 48px;
+            font-weight: bold;
+            margin: 10px 0;
+        }
+    </style>
+</head>
+<body>
+    <div id="app">
+        <div id="game-container">
+            <canvas id="game-canvas"></canvas>
+            <div id="player-info"></div>
+            <div id="current-player"></div>
+            <div id="dice-result">
+                <div>Dice Roll</div>
+                <div class="dice-value" id="dice-value">7</div>
+                <button onclick="document.getElementById('dice-result').classList.remove('show')">Close</button>
+            </div>
+            <div id="actions"></div>
+        </div>
+    </div>
+    <script type="module" src="/src/main.ts"></script>
+</body>
+</html>
+
