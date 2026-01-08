@@ -63,6 +63,9 @@ export class GameEngine {
             edges,
             diceRolled: false,
             lastDiceRoll: null,
+            lastDie1: null,
+            lastDie2: null,
+            rollHistory: new Map<number, number>(), // Distribution: sum -> count
             bank,
             developmentCardDeck,
             longestRoadPlayer: null,
@@ -359,17 +362,25 @@ export class GameEngine {
         return []
     }
 
-    rollDice(): number {
+    rollDice(): { die1: number, die2: number, total: number } {
         if (this.state.diceRolled) {
             throw new Error('Dice already rolled this turn')
         }
 
+        // Roll two dice, each with values 1-6
         const die1 = Math.floor(Math.random() * 6) + 1
         const die2 = Math.floor(Math.random() * 6) + 1
         const total = die1 + die2
 
+        // Store individual dice values
         this.state.diceRolled = true
         this.state.lastDiceRoll = total
+        this.state.lastDie1 = die1
+        this.state.lastDie2 = die2
+
+        // Update roll history distribution
+        const currentCount = this.state.rollHistory.get(total) || 0
+        this.state.rollHistory.set(total, currentCount + 1)
 
         if (total === 7) {
             // Robber phase - players with >7 resources discard half
@@ -381,7 +392,7 @@ export class GameEngine {
             this.state.phase = GamePhase.MainPhase
         }
 
-        return total
+        return { die1, die2, total }
     }
 
     private distributeResources(diceRoll: number): void {
@@ -803,6 +814,8 @@ export class GameEngine {
 
     endTurn(): void {
         this.state.diceRolled = false
+        this.state.lastDie1 = null // Reset dice display
+        this.state.lastDie2 = null
         this.state.currentPlayerIndex = (this.state.currentPlayerIndex + 1) % 4
         this.state.turnNumber++
         this.state.phase = GamePhase.RollingDice

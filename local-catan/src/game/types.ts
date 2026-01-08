@@ -74,6 +74,9 @@ export interface GameState {
     edges: Edge[]
     diceRolled: boolean
     lastDiceRoll: number | null
+    lastDie1: number | null // Individual die values
+    lastDie2: number | null
+    rollHistory: Map<number, number> // Distribution: sum -> count
     bank: Map<ResourceType, number>
     developmentCardDeck: DevelopmentCardType[]
     longestRoadPlayer: number | null

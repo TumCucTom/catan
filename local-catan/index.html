@@ -28,7 +28,7 @@
         }
         #player-info {
             position: absolute;
-            top: 10px;
+            top: 90px;
             left: 10px;
             background: rgba(0, 0, 0, 0.7);
             padding: 15px;
@@ -59,6 +59,40 @@
             color: #ffd700;
             margin-top: 5px;
         }
+        #dice-display {
+            position: absolute;
+            top: 10px;
+            left: 10px;
+            background: rgba(0, 0, 0, 0.7);
+            padding: 15px;
+            border-radius: 8px;
+            z-index: 100;
+            text-align: center;
+            display: flex;
+            gap: 10px;
+            align-items: center;
+        }
+        .dice-value {
+            font-size: 32px;
+            font-weight: bold;
+            width: 50px;
+            height: 50px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 8px;
+            border: 2px solid;
+        }
+        .dice-value.waiting {
+            color: #ffffff;
+            border-color: #ffffff;
+            background: rgba(255, 255, 255, 0.1);
+        }
+        .dice-value.rolled {
+            color: #888888;
+            border-color: #888888;
+            background: rgba(136, 136, 136, 0.2);
+        }
         #current-player {
             position: absolute;
             top: 10px;
@@ -68,6 +102,19 @@
             border-radius: 8px;
             z-index: 100;
             text-align: center;
+            min-width: 150px;
+        }
+        #roll-distribution {
+            position: absolute;
+            top: 90px;
+            right: 10px;
+            background: rgba(0, 0, 0, 0.7);
+            padding: 15px;
+            border-radius: 8px;
+            z-index: 100;
+            min-width: 180px;
+            max-height: 400px;
+            overflow-y: auto;
         }
         #actions {
             position: absolute;
@@ -96,26 +143,6 @@
             background: #555;
             cursor: not-allowed;
         }
-        #dice-result {
-            position: absolute;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-            background: rgba(0, 0, 0, 0.9);
-            padding: 30px;
-            border-radius: 12px;
-            z-index: 200;
-            text-align: center;
-            display: none;
-        }
-        #dice-result.show {
-            display: block;
-        }
-        .dice-value {
-            font-size: 48px;
-            font-weight: bold;
-            margin: 10px 0;
-        }
     </style>
 </head>
 <body>
@@ -124,11 +151,12 @@
             <canvas id="game-canvas"></canvas>
             <div id="player-info"></div>
             <div id="current-player"></div>
-            <div id="dice-result">
-                <div>Dice Roll</div>
-                <div class="dice-value" id="dice-value">7</div>
-                <button onclick="document.getElementById('dice-result').classList.remove('show')">Close</button>
+            <div id="dice-display">
+                <div class="dice-value waiting" id="die1">?</div>
+                <div style="font-size: 24px; color: #888;">+</div>
+                <div class="dice-value waiting" id="die2">?</div>
             </div>
+            <div id="roll-distribution"></div>
             <div id="actions"></div>
         </div>
     </div>
