@@ -221,32 +221,36 @@ export class GameEngine {
             ResourceType.Wheat,
             ResourceType.Ore
         ]
-        const shuffledResourcePorts = this.shuffleArray([...resourcePorts])
         
-        // Sort border edges by position around the board perimeter for even distribution
+        // Create array with all 9 port types (5 resource + 4 generic)
+        const allPortTypes: (ResourceType | '3:1')[] = [
+            ...resourcePorts,
+            '3:1', '3:1', '3:1', '3:1'
+        ]
+        
+        // Shuffle all port types together so they're randomly distributed
+        const shuffledPortTypes = this.shuffleArray([...allPortTypes])
+        
+        // Sort border edges by position around the board perimeter for fixed placement
+        // This ensures ports are always in the same positions (evenly distributed)
         const sortedBorderEdges = this.sortEdgesByPerimeterPosition(borderEdges)
         
-        // Place ports at roughly even intervals around the perimeter
-        // This ensures ports are distributed around the board rather than clustered
+        // Place ports at fixed, evenly distributed intervals around the perimeter
+        // This gives 9 fixed port positions
         const portCount = 9
         const interval = Math.floor(sortedBorderEdges.length / portCount)
         
-        const selectedEdges: number[] = []
+        const fixedPortEdges: number[] = []
         for (let i = 0; i < portCount; i++) {
             const index = (i * interval) % sortedBorderEdges.length
-            selectedEdges.push(sortedBorderEdges[index])
+            fixedPortEdges.push(sortedBorderEdges[index])
         }
         
-        // Assign ports to selected edges
+        // Assign shuffled port types to fixed port positions
+        // This randomizes which port type goes where, but keeps positions fixed
         for (let i = 0; i < portCount; i++) {
-            const edgeId = selectedEdges[i]
-            if (i < 5) {
-                // First 5: specific resource ports (2:1) - one for each resource type
-                this.state.edges[edgeId].port = shuffledResourcePorts[i]
-            } else {
-                // Remaining 4: generic ports (3:1)
-                this.state.edges[edgeId].port = '3:1'
-            }
+            const edgeId = fixedPortEdges[i]
+            this.state.edges[edgeId].port = shuffledPortTypes[i]
         }
     }
 
